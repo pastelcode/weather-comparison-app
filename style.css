@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+
+body {
+  font-family: 'Manrope', sans-serif !important;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  padding-left: 1em;
+}
+
+#cities-suggestion-list-container {
+  position: relative; /* Used to position suggestion list right above input */
+}
+
+#cities-suggestion-list {
+  /* Used to position suggestion list right above input */
+  position: absolute;
+  top: 0;
+  left: 0;
+  /*  */
+  height: 300px;
+}
+
+.city-suggestion {
+  /* Used to align city suggestion name to left */
+  display: flex !important;
+  justify-content: start;
+}
+
+.selected-city {
+  width: fit-content;
+  display: flex;
+}
+
+@media (min-width: 576px) {
+  #main-card {
+    max-width: 75%;
+  }
+
+  #form-container {
+    width: 75%;
+  }
+}
