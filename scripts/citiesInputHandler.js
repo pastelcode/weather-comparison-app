@@ -10,7 +10,7 @@ const getAllCities = async () => {
 }
 
 // Transforms a city name to a chip with name and a close button to remove city from selected cities list
-const buildCityChip = (cityName) => {
+const buildCityChip = (city) => {
   const element = document.createElement('div')
   element.classList.add(
     'selected-city',
@@ -22,11 +22,11 @@ const buildCityChip = (cityName) => {
     'px-3'
   )
   const nameSpan = document.createElement('span')
-  nameSpan.textContent = cityName
+  nameSpan.textContent = `${city.name}, ${city.country}`
   const closeButton = document.createElement('button')
   closeButton.type = 'button'
   closeButton.classList.add('btn', 'py-0', 'px-0', 'ps-3')
-  closeButton.onclick = () => removeSelectedCity(cityName)
+  closeButton.onclick = () => removeSelectedCity(city)
   const icon = document.createElement('span')
   icon.classList.add('material-symbols-outlined')
   icon.textContent = 'close'
@@ -52,14 +52,14 @@ const rebuildSelectedCitiesChips = () => {
   )
 }
 
-const selectCity = (cityName) => {
-  selectedCitiesToCompare.push(cityName)
+const selectCity = (city) => {
+  selectedCitiesToCompare.push(city)
   rebuildSelectedCitiesChips()
 }
 
-const removeSelectedCity = (cityName) => {
+const removeSelectedCity = (city) => {
   selectedCitiesToCompare = selectedCitiesToCompare.filter(
-    (e) => e !== cityName
+    (e) => e.name !== city.name && e.country !== city.country
   )
   rebuildSelectedCitiesChips()
 }
@@ -86,7 +86,7 @@ const fillCitiesSuggestions = (cities) => {
         'fw-light'
       )
       suggestionButton.onclick = () => {
-        selectCity(city.name)
+        selectCity(city)
         citiesInput.value = '' // Clear query
         citiesSuggestionList.innerHTML = '' // Clear suggestions
       }

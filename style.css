@@ -35,8 +35,8 @@ body {
 }
 
 @media (min-width: 576px) {
-  #main-card {
-    max-width: 75%;
+  .main-card {
+    max-width: 75% !important;
   }
 
   #form-container {
