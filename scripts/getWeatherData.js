@@ -1,5 +1,4 @@
 const entryPoint = document.getElementById('entry-point')
-let weatherData = []
 
 const clearSelectedCities = () => {
   selectedCitiesToCompare = []
@@ -20,7 +19,10 @@ const getWeatherData = async (cities) => {
     if (errorOccurred) {
       throw new Error('Some response has not status OK')
     }
-    weatherData = await Promise.all(response.map((result) => result.json()))
+    const weatherData = await Promise.all(
+      response.map((result) => result.json())
+    )
+    weatherData.forEach((weatherData) => createCityWeatherCard(weatherData))
     console.log(weatherData)
   } catch (error) {
     console.error(error)
@@ -38,4 +40,70 @@ const displayError = () => {
   alert.role = 'alert'
   alert.innerText = 'An error occurred while fetching weather info, try again'
   entryPoint.appendChild(alert)
+}
+
+const createCityWeatherCard = (weatherData) => {
+  const rowClasses = [
+    'd-flex',
+    'align-items-center',
+    'justify-content-center',
+    'gap-2',
+  ]
+
+  const mapIcon = document.createElement('span')
+  mapIcon.classList.add('material-symbols-outlined')
+  mapIcon.innerText = 'map'
+
+  const temperatureIcon = document.createElement('span')
+  temperatureIcon.classList.add('material-symbols-outlined')
+  temperatureIcon.innerText = 'thermometer'
+
+  const cloudIcon = document.createElement('span')
+  cloudIcon.classList.add('material-symbols-outlined')
+  cloudIcon.innerText = 'partly_cloudy_day'
+
+  const humidityIcon = document.createElement('span')
+  humidityIcon.classList.add('material-symbols-outlined')
+  humidityIcon.innerText = 'humidity_percentage'
+
+  const card = document.createElement('div')
+  card.classList.add(
+    'card',
+    'text-center',
+    'mb-3',
+    'w-50',
+    'mx-auto',
+    'shadow',
+    'rounded-4'
+  )
+
+  const cardBody = document.createElement('div')
+  cardBody.classList.add('card-body')
+
+  const cityName = document.createElement('h5')
+  cityName.classList.add('card-title', ...rowClasses, 'mb-3')
+  cityName.appendChild(mapIcon)
+  cityName.append(`${weatherData.name}, ${weatherData.sys.country}`)
+
+  const description = document.createElement('p')
+  description.classList.add('card-text', ...rowClasses)
+  description.appendChild(cloudIcon)
+  description.append(weatherData.weather[0].description)
+
+  const temperature = document.createElement('p')
+  temperature.classList.add('card-text', ...rowClasses)
+  temperature.appendChild(temperatureIcon)
+  temperature.append(`Temperature: ${weatherData.main.temp} °C`)
+
+  const humidity = document.createElement('p')
+  humidity.classList.add('card-text', ...rowClasses)
+  humidity.appendChild(humidityIcon)
+  humidity.append(`Humidity: ${weatherData.main.humidity}%`)
+
+  cardBody.appendChild(cityName)
+  cardBody.appendChild(description)
+  cardBody.appendChild(temperature)
+  cardBody.appendChild(humidity)
+  card.appendChild(cardBody)
+  entryPoint.appendChild(card)
 }
