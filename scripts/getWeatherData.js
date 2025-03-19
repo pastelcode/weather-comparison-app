@@ -1,4 +1,5 @@
 const entryPoint = document.getElementById('entry-point')
+const canvasContainer = document.getElementById('chart')
 
 const clearSelectedCities = () => {
   selectedCitiesToCompare = []
@@ -15,6 +16,7 @@ const getWeatherData = async (cities) => {
     const response = await Promise.all(requests)
     clearSelectedCities()
     entryPoint.innerHTML = ''
+    canvasContainer.innerHTML = ''
     const errorOccurred = response.some((promise) => !promise.ok)
     if (errorOccurred) {
       throw new Error('Some response has not status OK')
@@ -23,6 +25,7 @@ const getWeatherData = async (cities) => {
       response.map((result) => result.json())
     )
     weatherData.forEach((weatherData) => createCityWeatherCard(weatherData))
+    createTemperatureChart(weatherData)
     console.log(weatherData)
   } catch (error) {
     console.error(error)
@@ -106,4 +109,38 @@ const createCityWeatherCard = (weatherData) => {
   cardBody.appendChild(humidity)
   card.appendChild(cardBody)
   entryPoint.appendChild(card)
+}
+
+const createTemperatureChart = (weatherData) => {
+  const canvas = document.createElement('canvas')
+  canvasContainer.appendChild(canvas)
+  new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: weatherData.map((cityData) => cityData.name),
+      datasets: [
+        {
+          label: 'Temperature °C',
+          data: weatherData.map((cityData) => cityData.main.temp),
+          borderWidth: 2,
+          borderRadius: 5,
+          borderSkipped: false,
+          // borderColor: Utils.CHART_COLORS.blue,
+          // backgroundColor: Utils.transparentize(Utils.CHART_COLORS.blue, 0.5),
+        },
+      ],
+    },
+    plugins: {
+      colors: {
+        forceOverride: true,
+      },
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  })
 }
